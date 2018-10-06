@@ -19,6 +19,9 @@ well, "make install" should work for most flavors of Unix.  For Windows, use
 one of the special makefiles in win32/ or contrib/vstudio/ .  For VMS, use
 make_vms.com.
 
+If you want to compile with cmake, follow the instructions given at the top of
+CMakefile.txt. Recent IDEs such as Visual Studio 2017 and CLion recognize it.
+
 Questions about zlib should be sent to <zlib@gzip.org>, or to Gilles Vollant
 <info@winimage.com> for the Windows DLL version.  The zlib home page is
 http://zlib.net/ .  Before reporting a problem, please check this site to

@@ -1,4 +1,36 @@
-cmake_minimum_required(VERSION 2.4.4)
+# Distributed under the OSI-approved BSD 3-Clause License.
+
+#.rst:
+# CMakefile.txt for zlib
+# ----------------------
+#
+# Build script for ZLIB library.
+#
+# Configuraiton variables
+# ^^^^^^^^^^^^^^^^^^^^^^^
+#
+# Configurations are defined by following variables:
+#
+# ``BUILD_SHARED_LIBS``
+#   Build shared library.
+#   If you want to build both static and shared library, you can build
+#   these in individual build directories.
+#   utility binaries are also link against static or shared library
+#   according to this variable.
+#
+# ``INSTALL_BIN_DIR``
+#   install directory for user executables (``bin``)
+# ``INSTALL_LIB_DIR``
+#   install directory for libraries (``lib``)
+# ``INSTALL_INC_DIR``
+#   install direcotory for include files (``include``)
+# ``INSTALL_MAN_DIR``
+#   install directory for manual files (``share/man``)
+# ``INSTALL_PKGCONFIG_DIR``
+#   install directory for pkgconfig configuration files(``share/pkgconfig``)
+#
+
+cmake_minimum_required(VERSION 2.8)
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
 project(zlib C)
@@ -183,17 +215,12 @@ if(MINGW)
     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif(MINGW)
 
-if(ZLIB_BUILD_SHARED)
-  set(BUILD_SHARED_LIBS ON)
+add_library(zlib ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+if(BUILD_SHARED_LIBS)
+  set_property(TARGET zlib APPEND PROPERTY SOURCE "${ZLIB_DLL_SRCS}")
+  set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
+  set_target_properties(zlib PROPERTIES SOVERSION 1)
 endif()
-
-if(NOT BUILD_SHARED_LIBS)
-  set(ZLIB_DLL_SRCS "")
-endif()
-
-add_library(zlib ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
-set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
-set_target_properties(zlib PROPERTIES SOVERSION 1)
 
 if(NOT CYGWIN)
     # This property causes shared libraries on Linux to have the full version
